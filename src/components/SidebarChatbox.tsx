@@ -117,8 +117,8 @@ export default function SidebarChatbot({
     });
 
     const data = await res.json();
-
-    if (!data.success) {
+    
+    if (!res.ok) {
       // gracefully show assistant "error message"
       setMessages((prev) => [
         ...prev,

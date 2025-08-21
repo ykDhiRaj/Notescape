@@ -10,20 +10,57 @@ export default function OpenRouterKeySettings() {
   const save = async () => {
     setBusy(true)
     setStatus(null)
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setStatus("saved")
-    setBusy(false)
-    if (true) setApiKey("") // Simulate success
+    
+    try {
+      const response = await fetch('/api/save-key', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ apiKey }),
+      })
+
+      if (response.ok) {
+        setStatus("saved")
+        setApiKey("") // Clear the input on success
+      } else {
+        const error = await response.json()
+        setStatus("failed")
+        console.error('Failed to save API key:', error)
+      }
+    } catch (error) {
+      setStatus("failed")
+      console.error('Error saving API key:', error)
+    } finally {
+      setBusy(false)
+    }
   }
 
   const remove = async () => {
     setBusy(true)
     setStatus(null)
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setStatus("removed")
-    setBusy(false)
+    
+    try {
+      const response = await fetch('/api/delete-key', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (response.ok) {
+        setStatus("removed")
+      } else {
+        const error = await response.json()
+        setStatus("failed")
+        console.error('Failed to remove API key:', error)
+      }
+    } catch (error) {
+      setStatus("failed")
+      console.error('Error removing API key:', error)
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
